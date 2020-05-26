@@ -1,0 +1,13 @@
+.BagGroupTiles {
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-image: url(../../images/azul_pad.png);
+}
+
+.BagGroupTilesTable {
+    margin: 35px 35px;
+    table-layout: auto;
+}

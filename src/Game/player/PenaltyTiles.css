@@ -1,0 +1,9 @@
+.PenaltyTiles {
+    display: inline-block;
+    position: absolute;
+    left: 30px;
+    top: 655px;
+    width: 500px;
+    height: 65px;
+    /*border: 1px solid magenta;*/
+}

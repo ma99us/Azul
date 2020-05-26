@@ -1,0 +1,12 @@
+.Marker {
+    position: absolute;
+    left: 35px;
+    top: 1px;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-image: url(../../images/azul_marker.png);
+    transition: transform .2s ease-in-out;
+}

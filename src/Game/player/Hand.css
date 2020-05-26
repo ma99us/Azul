@@ -1,0 +1,10 @@
+.Hand {
+    position: relative;
+    display: inline-block;
+    width: 750px;
+    height: 758px;
+    border: 1px solid black;
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-image: url(../../images/azul_board_750.jpg);
+}

@@ -1,0 +1,9 @@
+.OldTiles {
+    display: inline-block;
+    position: absolute;
+    left: 390px;
+    top: 260px;
+    width: 340px;
+    height: 345px;
+    /*border: 1px solid magenta;*/
+}

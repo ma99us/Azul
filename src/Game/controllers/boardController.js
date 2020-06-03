@@ -1,20 +1,8 @@
 import {TileTypes} from "../board/Tile";
-import {BoardTiles} from "./Tile";
+import {BoardTiles} from "../board/Tile";
+import {findRowIndexIn2dTilesArrayByType} from "./utils";
 
 const boardController = (game) => {
-
-  const findRowIndexIn2dTilesArrayByType = (tiles2dArray, type) => {
-    if(!tiles2dArray){
-      return -1;
-    }
-    return tiles2dArray.findIndex(row => row && row.length > 0 && row[0] === type);
-  };
-
-  const clone2dArray = (arr) => {
-    const cArr = arr instanceof Array ? [...arr] : [];
-    cArr.map((r, i) => arr[i] instanceof Array ? [...arr[i]] : Object.assign({}, arr[i]));
-    return cArr;
-  };
 
   const dumpCenterTiles = (centerTiles, type, num) => {
     const idx = findRowIndexIn2dTilesArrayByType(centerTiles, type);
@@ -47,9 +35,17 @@ const boardController = (game) => {
     game.setState({centerTiles: centerTiles});
   };
 
+  const isDiceLeft = (bagTiles, centerTiles) => {
+    const bagTilesLeft = bagTiles.reduce((total, grp) => grp ? total + grp.length : total, 0);
+    const centerTilesLeft = centerTiles.reduce((total, grp) => grp ? total + grp.length : total, 0);
+    console.log("isDiceLeft; bagTilesLeft=" + bagTilesLeft + ", centerTilesLeft=" + centerTilesLeft); // #DEBUG
+    return bagTilesLeft + centerTilesLeft;
+  };
+
   return {
     dumpCenterTiles: dumpCenterTiles,
-    drawBagTiles: drawBagTiles
+    drawBagTiles: drawBagTiles,
+    isDiceLeft: isDiceLeft
   };
 };
 

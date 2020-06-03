@@ -2,9 +2,7 @@
     display: inline-block;
     width: 60px;
     height: 60px;
-    background-position: top left;
-    background-repeat: no-repeat;
-    background-image: url(../../images/azul_stones_set.png);
+    background: url(../../images/azul_stones_set.png) no-repeat top left;
     transition: transform 0.8s ease-in-out;
     cursor: pointer;
 }

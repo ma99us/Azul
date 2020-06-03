@@ -8,9 +8,9 @@ const GameActions = (props) => {
 
   let button = null;
   if(props.game.state.gameState === GameState.PICK_TILES){
-    button = <button onClick={props.game.scoreTurnHandler}>End Turn</button>;
+    button = <button onClick={props.game.scoreRoundHandler}>End Turn</button>;
   } else if(props.game.state.gameState === GameState.SCORE_TILES){
-    button = <button onClick={props.game.endTurnHandler}>New Round</button>;
+    button = <button onClick={props.game.endRoundHandler}>New Round</button>;
   }
 
   return (

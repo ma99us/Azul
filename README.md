@@ -1,6 +1,7 @@
 #  HOW TO USE:
-1) Run "npm install" in the extracted folder
-2) Run "npm start" to view the project
+1) Run "npm install" in the extracted folder.
+2) Run "npm start" to view the project.
+3) Run "npm run-script build" to make production release.
 
 # React stuff:
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

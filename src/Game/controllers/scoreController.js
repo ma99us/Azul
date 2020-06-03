@@ -1,13 +1,14 @@
-import {TileTypes, BoardTiles, Direction} from "../board/Tile";
+import {Direction} from "../board/Tile";
 
 const Penalties = [-1, -1, -2, -2, -2, -3, -3];
 
 const scoreController = (game) => {
 
   const addScore = (delta) => {
-    let score = game.state.score + delta;
-    if (score < 0) {
-      score = 0;
+    const score = [...game.state.score];
+    score[game.state.playerTurn] += delta;
+    if (score[game.state.playerTurn] < 0) {
+      score[game.state.playerTurn] = 0;
     }
     game.setState({score: score});
   };

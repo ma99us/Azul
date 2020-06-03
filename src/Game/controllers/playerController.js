@@ -1,23 +1,11 @@
 import {TileTypes, BoardTiles} from "../board/Tile";
 
 import scoreController from './scoreController';
+import {cloneSpliceArray, deepClone, findRowIndexIn2dTilesArrayByType} from "./utils";
 
 const playerController = (game) => {
 
   const scoreCtrl = scoreController(game);
-
-  const findRowIndexIn2dTilesArrayByType = (tiles2dArray, type) => {
-    if(!tiles2dArray){
-      return -1;
-    }
-    return tiles2dArray.findIndex(row => row && row.length > 0 && row[0] === type);
-  };
-
-  const clone2dArray = (arr) => {
-    const cArr = arr instanceof Array ? [...arr] : [];
-    cArr.map((r, i) => arr[i] instanceof Array ? [...arr[i]] : Object.assign({}, arr[i]));
-    return cArr;
-  };
 
   const isRowFull = (row, rowIdx) => {
     return row && row.length === rowIdx + 1;
@@ -28,11 +16,11 @@ const playerController = (game) => {
   };
 
   const canAddToRow = (row, rowIdx, type) => {
-    let oldRowIdx = findRowIndexIn2dTilesArrayByType(game.state.newTiles, type);
+    let oldRowIdx = findRowIndexIn2dTilesArrayByType(game.state.newTiles[game.state.playerTurn], type);
     if (oldRowIdx >= 0 && oldRowIdx !== rowIdx) {
       return false;
     }
-    if(checkTileRowHasType(game.state.oldTiles[rowIdx], type)){
+    if(checkTileRowHasType(game.state.oldTiles[game.state.playerTurn][rowIdx], type)){
       return false;
     }
     const rowType = (row && row.length > 0) ? row[0] : null;
@@ -76,9 +64,9 @@ const playerController = (game) => {
   };
 
   const pickCenterTiles = (type, rowIdx) => {
-    const centerTiles = clone2dArray(game.state.centerTiles);
-    const newTiles = clone2dArray(game.state.newTiles);
-    const penaltyTiles = [...game.state.penaltyTiles];
+    const centerTiles = deepClone(game.state.centerTiles);
+    const newTiles = deepClone(game.state.newTiles[game.state.playerTurn]);
+    const penaltyTiles = deepClone(game.state.penaltyTiles[game.state.playerTurn]);
 
     // move "One" marker if any
     const oneIdx = findRowIndexIn2dTilesArrayByType(centerTiles, TileTypes.ONE);
@@ -95,33 +83,48 @@ const playerController = (game) => {
     centerTiles[grpIdx] = [];
 
     game.setState({centerTiles: centerTiles});
-    game.setState({newTiles: newTiles});
-    game.setState({penaltyTiles: penaltyTiles});
+    game.setState({newTiles: cloneSpliceArray(game.state.newTiles, game.state.playerTurn, newTiles)});
+    game.setState({penaltyTiles: cloneSpliceArray(game.state.penaltyTiles, game.state.playerTurn, penaltyTiles)});
     resetPlayerState();
+
+    // check for score the round condition first
+    if (!game.controller.isDiceLeft(game.state.bagTiles, centerTiles)) {
+      game.scoreRoundHandler();
+    } else {
+      game.endTurnHandler();
+    }
   };
 
   // add picked tiles to New Tiles. finish player turn
   const pickBagGroupTiles = (groupIdx, type, rowIdx) => {
-    const bagTiles = clone2dArray(game.state.bagTiles);
-    const centerTiles = clone2dArray(game.state.centerTiles);
-    const newTiles = clone2dArray(game.state.newTiles);
-    const penaltyTiles = [...game.state.penaltyTiles];
+    const bagTiles = deepClone(game.state.bagTiles);
+    const centerTiles = deepClone(game.state.centerTiles);
+    const newTiles = deepClone(game.state.newTiles[game.state.playerTurn]);
+    const penaltyTiles = deepClone(game.state.penaltyTiles[game.state.playerTurn]);
 
     const groupTiles = [...bagTiles[groupIdx]];
     groupTiles.forEach(gType => {
       if (gType === type) {
         addNewTiles(newTiles, penaltyTiles, gType, 1, rowIdx);
       } else {
-        game.boardController.dumpCenterTiles(centerTiles, gType, 1);
+        game.controller.dumpCenterTiles(centerTiles, gType, 1);
       }
     });
     bagTiles[groupIdx] = [];
 
     game.setState({bagTiles: bagTiles});
     game.setState({centerTiles: centerTiles});
-    game.setState({newTiles: newTiles});
-    game.setState({penaltyTiles: penaltyTiles});
+    game.setState({newTiles: cloneSpliceArray(game.state.newTiles, game.state.playerTurn, newTiles)});
+    game.setState({penaltyTiles: cloneSpliceArray(game.state.penaltyTiles, game.state.playerTurn, penaltyTiles)});
     resetPlayerState();
+
+    // check for score the round condition first
+    if (!game.controller.isDiceLeft(bagTiles, centerTiles)) {
+      game.scoreRoundHandler();
+    } else {
+      game.endTurnHandler();
+    }
+
   };
 
   const tileTypeToOldTilesColIdx = (type, rowIdx) => {
@@ -140,9 +143,9 @@ const playerController = (game) => {
   };
 
   const promoteTileRows = () => {
-    let newTiles = clone2dArray(game.state.newTiles);
-    let oldTiles = clone2dArray(game.state.oldTiles);
-    let penaltyTiles = [...game.state.penaltyTiles];
+    let newTiles = deepClone(game.state.newTiles[game.state.playerTurn]);
+    let oldTiles = deepClone(game.state.oldTiles[game.state.playerTurn]);
+    let penaltyTiles = deepClone(game.state.penaltyTiles[game.state.playerTurn]);
     let score = 0;
 
     newTiles = newTiles.map((row, rowIdx) => {
@@ -155,14 +158,22 @@ const playerController = (game) => {
       }
     });
 
-    game.setState({newTiles: newTiles});
-    game.setState({oldTiles: oldTiles});
+    game.setState({newTiles: cloneSpliceArray(game.state.newTiles, game.state.playerTurn, newTiles)});
+    game.setState({oldTiles: cloneSpliceArray(game.state.oldTiles, game.state.playerTurn, oldTiles)});
 
     score += scoreCtrl.scorePenaltyTiles(penaltyTiles);
     penaltyTiles = [];
 
     scoreCtrl.addScore(score);
-    game.setState({penaltyTiles: penaltyTiles});
+    game.setState({penaltyTiles: cloneSpliceArray(game.state.penaltyTiles, game.state.playerTurn, penaltyTiles)});
+  };
+
+  const findNextPlayerTurn = () => {
+    let nextPlayer = game.state.players.findIndex((p, idx) => game.state.penaltyTiles[idx].indexOf(TileTypes.ONE) >= 0);
+    if (nextPlayer < 0) {
+      nextPlayer = 0;
+    }
+    return nextPlayer;
   };
 
   const resetPlayerState = () => {
@@ -177,7 +188,8 @@ const playerController = (game) => {
     pickCenterTiles: pickCenterTiles,
     pickBagGroupTiles: pickBagGroupTiles,
     promoteTileRows: promoteTileRows,
-    resetPlayerState: resetPlayerState
+    resetPlayerState: resetPlayerState,
+    findNextPlayerTurn: findNextPlayerTurn
   };
 };
 

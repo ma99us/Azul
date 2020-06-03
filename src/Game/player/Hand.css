@@ -4,7 +4,18 @@
     width: 750px;
     height: 758px;
     border: 1px solid black;
-    background-position: top left;
-    background-repeat: no-repeat;
-    background-image: url(../../images/azul_board_750.jpg);
+    background: url(../../images/azul_board_750.jpg) no-repeat top left;
+    padding: unset;
+    margin: 6px;
+    /*transform: scale(0.6);*/
+    zoom: 60%;
+    transition: transform 0.8s ease-in-out;
+    z-index: -1;
+}
+
+.marked {
+    z-index: 10;
+    /*margin: 0 160px;*/
+    transform: scale(1.4);
+    box-shadow: 0px 0px 10px 8px black;
 }

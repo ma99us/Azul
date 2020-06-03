@@ -1,4 +1,8 @@
 .CenterTiles {
+    height: 72px;
+    padding: 6px;
+    border-bottom: 1px solid lightgray;
+    /*background-color: lightgray;*/
     /*animation: fall 0.3s ease-out;*/
 }
 

@@ -2,9 +2,8 @@
     display: inline-block;
     width: 200px;
     height: 200px;
-    background-position: top left;
-    background-repeat: no-repeat;
-    background-image: url(../../images/azul_pad.png);
+    background: url(../../images/azul_pad.png) no-repeat top left;
+    padding: unset;
 }
 
 .BagGroupTilesTable {

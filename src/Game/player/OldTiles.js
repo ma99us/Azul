@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Tile, {Direction} from '../board/Tile';
+import Tile from '../board/Tile';
 import css from './OldTiles.css'
 
 const OldTiles = (props) => {

@@ -12,7 +12,7 @@ const RowSelector = (props) => {
   const arrows = Array(5).fill(null).map((row, rowIdx) => {
     const left = 0;
     const top = 5 + sizeY * rowIdx;
-    const goodRow = props.game.playerController.canAddToRow(props.tiles[rowIdx], rowIdx, props.type);
+    const goodRow = props.game.controller.canAddToRow(props.tiles[rowIdx], rowIdx, props.type);
     goodRowsNum += goodRow ? 1 : 0;
     const style = goodRow
       ? {display: 'block', left: `${left}px`, top: `${top}px`}
